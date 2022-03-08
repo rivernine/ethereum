@@ -14,4 +14,4 @@
 2. Creator가 offchain에 메타데이터 업로드 후 URI 정보 획득
 3. Creator가 mint함수 호출 (owner: creator) 
 
-## 2. Test
+## 2. Te
