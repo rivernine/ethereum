@@ -9,6 +9,10 @@
 |Endpoint|Ropsten|
 |Endpoint https|https://ropsten.infura.io/v3/5dd62c74a8cb45c1926f431dacf8266a|
 |Endpoint ws|wss://ropsten.infura.io/ws/v3/5dd62c74a8cb45c1926f431dacf8266a|
+|||
+|IPFS ID|26Dt5R1BjtIEIqW94fH9JQKykR3|
+|IPFS Secret|3127e603416b7c3caeec3277b3594b4f|
+|Endpoint|https://ipfs.infura.io:5001|
 
 ### Metamask
 |network|password|words|
@@ -168,6 +172,7 @@ contract UniqueSample2 is ERC721URIStorage  {
 
     /**
     * Mints and Transfer 
+    * 민팅 후 즉시 delegator에게 전송
     */
     function mintAndTransfer(address delegator, string memory tokenURI) public returns (uint256){
         _tokenIds.increment();
@@ -176,6 +181,27 @@ contract UniqueSample2 is ERC721URIStorage  {
         _safeMint(msg.sender, newItemId);
         _setTokenURI(newItemId, tokenURI);
         _transfer(msg.sender, delegator, newItemId);
+
+        return newItemId;
+    }
+
+    /**
+    * Mints and event Transfer 
+    * only event
+    * 실제 전송이 아닌 이벤트만 방출
+    * 
+    * etherscan과 rarible에는 delegator가 owner인것으로 나온다.
+    * 하지만, delegator에게는 권한이 없다.
+    * 
+    * 실제로 직접 ownerOf함수를 호출하면 msg.sender가 owner로 나온다.
+    */
+    function mintWithEvent(address delegator, string memory tokenURI) public returns (uint256){
+        _tokenIds.increment();
+
+        uint256 newItemId = _tokenIds.current();
+        _safeMint(msg.sender, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+        emit Transfer(msg.sender, delegator, newItemId);
 
         return newItemId;
     }
@@ -226,7 +252,7 @@ $ npx hardhat console --network ropsten
 ## 7. 결과
 - Transaction (https://ropsten.etherscan.io/address/0x1f0c2fe4147d9561c4cf61638c934a1aff04c22e)
   - 1번의 transaction 발생
-  
+
 ![](./Interact_3.jpg)
 
 - Transaction detail (https://ropsten.etherscan.io/tx/0x85a5d3f9915fafa4b59723f11e0a52d15ee752a3dd0e3257e3061086904a777b)
@@ -235,3 +261,56 @@ $ npx hardhat console --network ropsten
 ![](./Interact_4.jpg)
 
 ![](./Interact_5.jpg)
+
+- Rinkeby 결과 (https://rinkeby.etherscan.io/token/0xa5743dbca3638d1c63e39a701188b59039515e4f)
+
+
+## 8. 운영 시나리오
+### 8.1. IPFS 업로드
+- 이미지 업로드
+```sh
+# https://docs.infura.io/infura/networks/ipfs/http-api-methods/add
+
+$ curl -X POST -F file=@"/home/jack/ipfs-tutorial/assets/mona.jpg" -u "26Dt5R1BjtIEIqW94fH9JQKykR3:3127e603416b7c3caeec3277b3594b4f" "https://ipfs.infura.io:5001/api/v0/add"
+
+{"Name":"mona.jpg","Hash":"QmVCK8MY9RnoDVg7epYcGZvH89SS4QpEgHA2NsYXRUgtWo","Size":"407913"}
+```
+
+- json 업로드
+```sh
+$ curl -X POST -F file=@"/home/jack/ipfs-tutorial/assets/10.json" -u "26Dt5R1BjtIEIqW94fH9JQKykR3:3127e603416b7c3caeec3277b3594b4f" "https://ipfs.infura.io:5001/api/v0/add"
+
+{"Name":"10.json","Hash":"QmNYSwLDVMLYcSiFGZkw7wNY6jDzXYE2w7cfJKAntgaoW8","Size":"360"}
+```
+
+### 8.2. 업로드 확인
+```sh
+# https://docs.infura.io/infura/networks/ipfs/http-api-methods/get
+curl -X POST "https://ipfs.infura.io:5001/api/v0/get?arg=QmNYSwLDVMLYcSiFGZkw7wNY6jDzXYE2w7cfJKAntgaoW8"
+```
+- IPFS (opensea standard)
+  - `ipfs://<Content-Identifier>/<optional path to resource>`
+  - e.g. `ipfs://QmNYSwLDVMLYcSiFGZkw7wNY6jDzXYE2w7cfJKAntgaoW8`
+- Subdomain
+  - `https://<Content-Identifier>.ipfs.infura-ipfs.io/<optional path to resource>`
+  - e.g. `https://QmNYSwLDVMLYcSiFGZkw7wNY6jDzXYE2w7cfJKAntgaoW8.ipfs.infura-ipfs.io`
+- Path resolution
+  - `https://infura-ipfs.io/ipfs/<Content-Identifier>/<optional path to resource>`
+  - e.g. `https://infura-ipfs.io/ipfs/QmNYSwLDVMLYcSiFGZkw7wNY6jDzXYE2w7cfJKAntgaoW8`
+
+
+### 8.3. Mint with URI
+```sh
+$ npx hardhat console --network rinkeby
+
+> const Unique = await ethers.getContractFactory('UniqueSample2')
+> const unique = Unique.attach('0xA5743dBcA3638D1c63e39a701188b59039515E4F')
+> await unique.mint('ipfs://QmNYSwLDVMLYcSiFGZkw7wNY6jDzXYE2w7cfJKAntgaoW8')
+```
+
+### 8.4. 결과
+- etherscan (https://rinkeby.etherscan.io/tx/0x66878e64eef610e7a9adb5c9d4882b66d58737c481cec94a6d9514255f17337c)
+![](./result_1.jpg)
+
+- opensea (https://testnets.opensea.io/assets/0xa5743dbca3638d1c63e39a701188b59039515e4f/10)
+![](./result_2.jpg)
