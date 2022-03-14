@@ -1,0 +1,17 @@
+{
+    "name": "Salvator Mundi",
+    "description": "구세주",
+    "external_link": "https://salvatormundi.com",
+    "image": "ipfs://QmUtbLzEgCYt625PUpSZQzaXvVmcqgX6qFTk2SNXhsJZAB",
+    "traits": [
+        {
+            "trait_type": "artist",
+            "value": "VINCI"
+        },
+        {
+            "display_type": "date", 
+            "trait_type": "created at",
+            "value": "1285210800"
+        }
+    ]
+}

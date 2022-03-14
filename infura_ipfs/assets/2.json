@@ -1,0 +1,17 @@
+{
+    "name": "Vitruvian Man",
+    "description": "비트루비우스적 인간",
+    "external_link": "https://vitruvianman.com",
+    "image": "ipfs://QmYWG6L5xuPYNrdPnoKLdYyTB2Cq6spfTM2aFUCkNUHoLq",
+    "traits": [
+        {
+            "trait_type": "artist",
+            "value": "Jack"
+        },
+        {
+            "display_type": "date", 
+            "trait_type": "created at",
+            "value": "1782360800"
+        }
+    ]
+}

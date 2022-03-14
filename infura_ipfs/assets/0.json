@@ -1,0 +1,17 @@
+{
+    "name": "Monalisa",
+    "description": "모나리자",
+    "external_link": "https://monalisa.com",
+    "image": "ipfs://QmP2RfJJNnRSswVFLg98U7VJZbiS8NKa2GyPwJXKoqsyx5",
+    "traits": [
+        {
+            "trait_type": "artist",
+            "value": "GUS"
+        },
+        {
+            "display_type": "date", 
+            "trait_type": "created at",
+            "value": "1546360800"
+        }
+    ]
+}

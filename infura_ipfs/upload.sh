@@ -1,0 +1,1 @@
+curl -X POST -F file=@"C:\Users\강재구\Desktop\Jack\NFT_2022\ethereum\infura_ipfs\images\0.jpg" -u "26Dt5R1BjtIEIqW94fH9JQKykR3:3127e603416b7c3caeec3277b3594b4f" "https://ipfs.infura.io:5001/api/v0/add"
