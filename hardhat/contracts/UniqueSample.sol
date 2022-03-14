@@ -9,14 +9,18 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 contract UniqueSample is ERC721URIStorage, EIP712 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+    string private constant SIGNING_DOMAIN = "Unique Sample";
+    string private constant SIGNATURE_VERSION = "1";
 
     struct NFTVoucher {
         uint256 tokenId;
         bytes signature;
     }
 
-    constructor() ERC721("Unique Sample", "US") {
-    }
+    constructor() 
+        ERC721("Unique Sample", "US")
+        EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION)
+    {}
 
     /**
     * Mints 
@@ -66,7 +70,6 @@ contract UniqueSample is ERC721URIStorage, EIP712 {
     function redeem(NFTVoucher calldata voucher, string memory tokenURI) public returns (uint256) {
         address signer = _verify(voucher);
 
-        uint256 voucher.tokenId = _tokenIds.current();
         _safeMint(msg.sender, voucher.tokenId);
         _setTokenURI(voucher.tokenId, tokenURI);
 
@@ -89,7 +92,7 @@ contract UniqueSample is ERC721URIStorage, EIP712 {
     function _hash(NFTVoucher calldata voucher) internal view returns (bytes32) {
         return _hashTypedDataV4(keccak256(abi.encode(
             keccak256("NFTVoucher(uint256 tokenId)"),
-            voucher.tokenId,        
+            voucher.tokenId
         )));
     } 
 }
