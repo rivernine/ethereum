@@ -9,8 +9,6 @@ const SIGNING_DOMAIN_VERSION = "1"
  * 
  * @typedef {object} NFTVoucher
  * @property {ethers.BigNumber | number} tokenId the id of the un-minted NFT
- * @property {ethers.BigNumber | number} minPrice the minimum price (in wei) that the creator will accept to redeem this NFT
- * @property {string} uri the metadata URI to associate with this NFT
  * @property {ethers.BytesLike} signature an EIP-712 signature of all fields in the NFTVoucher, apart from signature itself.
  */
 
@@ -35,8 +33,6 @@ class LazyMinter {
    * Creates a new NFTVoucher object and signs it using this LazyMinter's signing key.
    * 
    * @param {ethers.BigNumber | number} tokenId the id of the un-minted NFT
-   * @param {string} uri the metadata URI to associate with this NFT
-   * @param {ethers.BigNumber | number} minPrice the minimum price (in wei) that the creator will accept to redeem this NFT. defaults to zero
    * 
    * @returns {NFTVoucher}
    */
