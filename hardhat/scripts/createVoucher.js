@@ -1,16 +1,18 @@
 const { LazyMinter } = require('./LazyMinter.js')
 
 async function main() {
-  const [signers] = await ethers.getSigners();
+  const [signer] = await ethers.getSigners();
 
-  console.log("Signer account:", signers.address);  
-  const contract = '0xA179601CF4B7F7D4BC6280eafdE0432F54Fa1908'
-  const lazyMinter = new LazyMinter({ contract, signers })
-  const tokenId = 0
+  console.log("Signer account:", signer.address);  
+  const Unique = await ethers.getContractFactory('UniqueSample')
+  const contract = await Unique.attach('0x13efF1702972b33bf7e839481Ad540B521f94601')
+  const lazyMinter = new LazyMinter({ contract, signer })
+  const tokenId = 3
 
   const voucher = await lazyMinter.createVoucher(tokenId)
 
-  console.log("Voucher #" + tokenId + ": " + voucher)
+  console.log("Voucher #" + tokenId)
+  console.log(voucher)
 }
 
 main()

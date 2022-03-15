@@ -3,15 +3,15 @@
 ## image info
 |token ID|image|image IPFS|
 |:-:|:-:|:-:|
-|0|`0.jpg`|ipfs://QmP2RfJJNnRSswVFLg98U7VJZbiS8NKa2GyPwJXKoqsyx5|
-|1|`1.jpg`|ipfs://QmUtbLzEgCYt625PUpSZQzaXvVmcqgX6qFTk2SNXhsJZAB|
-|2|`2.jpg`|ipfs://QmYWG6L5xuPYNrdPnoKLdYyTB2Cq6spfTM2aFUCkNUHoLq|
-|3|`3.jpg`|ipfs://QmTPrCKDFKrzBdPB2T21o1gjJGgLrvsSGkSu33jUeYNqV1|
+|0|`0.jpg`|ipfs://QmXNo9eZ6aBrrj97jeULKg6UkHWebBEjDsLMyayVQX65Ry|
+|1|`1.jpg`|ipfs://QmaEamQpb5AmvK7Ri3uVTCJu6JBxWc2LikGrG2NrDNVHWu|
+|2|`2.jpg`|ipfs://QmP7GmcWAyLAXwFkqH3PNsmLTPCLUaQepgZWn4hvJ3iaUB|
+|3|`3.jpg`|ipfs://QmTgHaVJP4XGP7bWmhaJJXuRCEkmtwsSTawByKMqjAEYfn|
 
 ## asset info
 |token ID|asset|asset IPFS|
 |:-:|:-:|:-:|
-|0|`0.json`|ipfs://QmQkdob4rZwxY8mC39Dqe56LWfkSudAZmmSA5d8zx8yF4m|
-|1|`1.json`|ipfs://QmakZpr5yKWzAwm5zL4gqY4Cs8A2zXGUhdWJNaqTtt4swJ|
-|2|`2.json`|ipfs://QmNYjL2CsM5dvAjpo4CDmiXUMjjMshgZ7zVPwdXHdADfmh|
-|3|`3.json`|ipfs://QmeCLBcBUZsyZBKBpHbVBKdrNCNhZRWyytLoa2pweurDyK|
+|0|`0.json`|ipfs://QmVm3Lc4DaGozyiFD5Dj2xKS9p1ZLxD9xETtAVQVV5PTMX|
+|1|`1.json`|ipfs://QmX6j8B15ad31Zbwv73WpZwUfSV79rzbvUcjEkxQb2Wvhe|
+|2|`2.json`|ipfs://QmduiEL3hkqf5TZhPNPUqMcuAXS16xaNJRaSMQe19dNWkZ|
+|3|`3.json`|ipfs://QmSEpyKQXTamAWVncVbu8D3Ph5Wmzormv54hZqDbvxguUq|

@@ -95,4 +95,15 @@ contract UniqueSample is ERC721URIStorage, EIP712 {
             voucher.tokenId
         )));
     } 
+
+    /**
+    * Returns the chain id of the current blockchain.
+    */
+    function getChainID() external view returns (uint256) {
+        uint256 id;
+        assembly {
+            id := chainid()
+        }
+        return id;
+    }
 }

@@ -21,3 +21,11 @@ struct NFTVoucher {
 Buyer는 `redeem`함수를 호출하여 sigend voucher를 상환한다.
 Signed voucher가 유효하고 NFT발행 권한을 가진 계정에 속한경우, 새로운 토큰이 발행된다.
 
+## 2. e.g
+### voucher
+```sh
+{
+  tokenId: 0,
+  signature: '0x4d6b15103b3d58930744448bf15426e39de78a3ee528934a1577d5826d4613ff166ccb2dbb42c61aebb6b22b82291cf52aaa2e5023a4704c9bb9e113d3801c5b1b'
+}
+```
