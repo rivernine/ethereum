@@ -517,48 +517,6 @@
         "IERC165"
       ]
     },
-    "C:\\Users\\강재구\\Desktop\\Jack\\NFT_2022\\ethereum\\hardhat\\contracts\\UniqueDev.sol": {
-      "lastModificationDate": 1647334404784,
-      "contentHash": "26445a509af8565de99ab6ddadf7dbaa",
-      "sourceName": "contracts/UniqueDev.sol",
-      "solcConfig": {
-        "version": "0.8.9",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/AccessControl.sol",
-        "@openzeppelin/contracts/utils/Counters.sol",
-        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
-        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "UniqueDev"
-      ]
-    },
     "C:\\Users\\강재구\\Desktop\\Jack\\NFT_2022\\ethereum\\hardhat\\node_modules\\@openzeppelin\\contracts\\access\\AccessControl.sol": {
       "lastModificationDate": 1647245708087,
       "contentHash": "76cae8e1eb9c27e818b0b08e1527f731",
@@ -632,6 +590,89 @@
       ],
       "artifacts": [
         "IAccessControl"
+      ]
+    },
+    "C:\\Users\\강재구\\Desktop\\Jack\\NFT_2022\\ethereum\\hardhat\\contracts\\UniqueAlphaDev.sol": {
+      "lastModificationDate": 1647408897316,
+      "contentHash": "831855e2bc3a494b769abdd9cf19a436",
+      "sourceName": "contracts/UniqueAlphaDev.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/AccessControl.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "UniqueAlphaDev"
+      ]
+    },
+    "C:\\Users\\강재구\\Desktop\\Jack\\NFT_2022\\ethereum\\hardhat\\contracts\\UniqueAlphaDevV2.sol": {
+      "lastModificationDate": 1647419553913,
+      "contentHash": "fba667a90c25897729735205851c8416",
+      "sourceName": "contracts/UniqueAlphaDevV2.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/AccessControl.sol",
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "UniqueAlphaDevV2"
       ]
     }
   }
