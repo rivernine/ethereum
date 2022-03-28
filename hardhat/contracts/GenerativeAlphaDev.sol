@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import '@openzeppelin/contracts/access/Ownable.sol';
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
@@ -17,13 +18,14 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 /**
  * Not reveal
  */
-contract GenerativeAlphaDev is ERC721URIStorage, EIP712, AccessControl {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, AccessControl, Ownable {
     
     /* Voucher */
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     string private constant SIGNING_DOMAIN = "GenerativeAlphaDev";
     string private constant SIGNATURE_VERSION = "1";
     struct NFTVoucher {
+        // address buyer;
         uint256 tokenId;
         string uri;
         bytes signature;
@@ -35,7 +37,8 @@ contract GenerativeAlphaDev is ERC721URIStorage, EIP712, AccessControl {
     address public vault;
 
     /* Sale */
-    bool private isActive;
+    bool public isActive;
+    uint256 public price;
 
     constructor(address minter) 
         ERC721("GenerativeAlphaDev", "GAD")
@@ -56,10 +59,15 @@ contract GenerativeAlphaDev is ERC721URIStorage, EIP712, AccessControl {
         vault = _vault;
     }
 
-    /**
-    * Redeem
-    */
-    function redeem(NFTVoucher calldata voucher) public returns (uint256) {
+    function setActive(bool _isActive) external onlyOwner {
+        isActive = _isActive;
+    }
+
+    /* Redeem */
+    function redeem(NFTVoucher calldata voucher) external payable returns (uint256) {
+        require(IsActive, "Sale must be active to mint");
+        require(msg.value >= price, 'Ether Amount Denied');
+
         address signer = _verify(voucher);
         require(hasRole(MINTER_ROLE, signer), "Signature invalid or unauthorized");
 
@@ -70,8 +78,6 @@ contract GenerativeAlphaDev is ERC721URIStorage, EIP712, AccessControl {
         * It will be used in the beta version.
         */
         // _transfer(msg.sender, BB, voucher.tokenId);
-
-        return voucher.tokenId;
     }
 
     /**
@@ -108,5 +114,11 @@ contract GenerativeAlphaDev is ERC721URIStorage, EIP712, AccessControl {
     */
     function supportsInterface(bytes4 interfaceId) public view virtual override (AccessControl, ERC721) returns (bool) {
         return ERC721.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
+    }
+
+    // Send balance of contract to address referenced in `vault`
+    function withdraw() external payable onlyOwner {
+        require(vault != address(0), 'Vault Invalid');
+        require(payable(vault).send(address(this).balance));
     }
 }
