@@ -8,8 +8,8 @@ async function main() {
   const uniqueAlphaDevV2 = await UniqueAlphaDevV2.attach('0x236F20c038eB2803AA4536675162F992aC002E42')
 
   const voucher = {
-    uri: 'ipfs://QmVm3Lc4DaGozyiFD5Dj2xKS9p1ZLxD9xETtAVQVV5PTMX',
-    signature: '0xcca96b8e42290e61e9ef74e5ce8b7d7b90789e7417a12689e02f8528718cfbb848da2494851b074951f663ed172799b0120f7c848ff22952100d634960232d1f1c'
+    uri: 'ipfs://QmX6j8B15ad31Zbwv73WpZwUfSV79rzbvUcjEkxQb2Wvhe',
+    signature: '0x6f950b1cf7215e3755dd03da79f428bbd485851804f3dd091ed7d29b1dca28c44d6b7bd842738af36802e8f2b9896033262ec3f0169227e59198e185fe9c483a1c'
   }
 
   console.log(await uniqueAlphaDevV2.connect(redeemer).redeem(voucher))

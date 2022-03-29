@@ -9,15 +9,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
-/**
- * 1. 리빌 여부
- * 2. 소각 여부
- * 3. 팀 물량 ( 팀 물량 민팅비용은 누가 지불? )
- */
-
-/**
- * Not reveal
- */
 contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, AccessControl, Ownable {
     
     /* Voucher */
@@ -25,9 +16,8 @@ contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, Acces
     string private constant SIGNING_DOMAIN = "GenerativeAlphaDev";
     string private constant SIGNATURE_VERSION = "1";
     struct NFTVoucher {
-        // address buyer;
         uint256 tokenId;
-        string uri;
+        string tokenURI;
         bytes signature;
     }
 
@@ -40,11 +30,13 @@ contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, Acces
     bool public isActive;
     uint256 public price;
 
-    constructor(address minter) 
+    constructor(address minter, uint256 maxSupply, string uri, uint256 price) 
         ERC721("GenerativeAlphaDev", "GAD")
         EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) {
             _setupRole(MINTER_ROLE, minter);
-            setBaseURI("ipfs://sample")
+            MAX_SUPPLY = maxSupply;
+            setBaseURI(uri)
+            setPrice(price)
         }
 
     function _baseURI() internal view virtual override returns (string memory) {
@@ -63,44 +55,45 @@ contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, Acces
         isActive = _isActive;
     }
 
+    function setPrice(uint256 _price) public onlyOwner {
+        price = _price;
+    }
+
     /* Redeem */
     function redeem(NFTVoucher calldata voucher) external payable returns (uint256) {
         require(IsActive, "Sale must be active to mint");
-        require(msg.value >= price, 'Ether Amount Denied');
-
+        require(totalSupply() + 1 <= MAX_SUPPLY, "Reached max supply.");
+        require(tx.origin == msg.sender, 'The caller is another contract.');
+        require(msg.value >= price, 'Need to send more ETH.');
         address signer = _verify(voucher);
         require(hasRole(MINTER_ROLE, signer), "Signature invalid or unauthorized");
 
         _safeMint(msg.sender, voucher.tokenId);
-        _setTokenURI(voucher.tokenId, voucher.uri);
-
-        /**
-        * It will be used in the beta version.
-        */
-        // _transfer(msg.sender, BB, voucher.tokenId);
+        _setTokenURI(voucher.tokenId, voucher.tokenURI);
     }
 
-    /**
-    * Verifies the signature for a given Voucher.
-    */
+    /* Send balance of contract to address referenced in `vault` */
+    function withdraw() external payable onlyOwner {
+        require(vault != address(0), 'Vault Invalid');
+        require(payable(vault).send(address(this).balance));
+    }
+
+    /* Verifies the signature for a given Voucher. */
     function _verify(NFTVoucher calldata voucher) internal view returns (address) {
         bytes32 digest = _hash(voucher);
         return ECDSA.recover(digest, voucher.signature);
     }
 
-    /**
-    * Returns a hash of the given Voucher
-    */
+    /* Returns a hash of the given Voucher */
     function _hash(NFTVoucher calldata voucher) internal view returns (bytes32) {
         return _hashTypedDataV4(keccak256(abi.encode(
-            keccak256("NFTVoucher(string uri)"),
-            keccak256(bytes(voucher.uri))
+            keccak256("NFTVoucher(uint256 tokenId, string tokenURI)"),
+            keccak256(bytes(voucher.tokenId)),
+            keccak256(bytes(voucher.tokenURI))
         )));
     } 
 
-    /**
-    * Returns the chain id of the current blockchain.
-    */
+    /* Returns the chain id of the current blockchain. */
     function getChainID() external view returns (uint256) {
         uint256 id;
         assembly {
@@ -109,16 +102,9 @@ contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, Acces
         return id;
     }
 
-    /**
-    * For ERC-165
-    */
+    /* For ERC-165 */
     function supportsInterface(bytes4 interfaceId) public view virtual override (AccessControl, ERC721) returns (bool) {
         return ERC721.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
     }
 
-    // Send balance of contract to address referenced in `vault`
-    function withdraw() external payable onlyOwner {
-        require(vault != address(0), 'Vault Invalid');
-        require(payable(vault).send(address(this).balance));
-    }
 }
