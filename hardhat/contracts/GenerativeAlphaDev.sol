@@ -5,11 +5,10 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import '@openzeppelin/contracts/access/Ownable.sol';
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
-contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, AccessControl, Ownable {
+contract GenerativeAlphaDev is ERC721URIStorage, EIP712, AccessControl, Ownable {
     
     /* Voucher */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -30,21 +29,21 @@ contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, Acces
     bool public isActive;
     uint256 public price;
 
-    constructor(address minter, uint256 maxSupply, string uri, uint256 price) 
+    constructor(address minter, uint256 maxSupply, string memory _uri, uint256 _price) 
         ERC721("GenerativeAlphaDev", "GAD")
         EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) {
             _setupRole(MINTER_ROLE, minter);
             MAX_SUPPLY = maxSupply;
-            setBaseURI(uri)
-            setPrice(price)
+            setBaseURI(_uri);
+            setPrice(_price);
         }
 
     function _baseURI() internal view virtual override returns (string memory) {
         return baseURI;
     }
 
-    function setBaseURI(string calldata uri) external onlyOwner {
-        baseURI = uri;
+    function setBaseURI(string memory _uri) public onlyOwner {
+        baseURI = _uri;
     }
 
     function setVault(address _vault) external onlyOwner {
@@ -60,9 +59,9 @@ contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, Acces
     }
 
     /* Redeem */
-    function redeem(NFTVoucher calldata voucher) external payable returns (uint256) {
-        require(IsActive, "Sale must be active to mint");
-        require(totalSupply() + 1 <= MAX_SUPPLY, "Reached max supply.");
+    function redeem(NFTVoucher calldata voucher) external payable {
+        require(isActive, "Sale must be active to mint");
+        require(voucher.tokenId + 1 <= MAX_SUPPLY, "Reached max supply.");
         require(tx.origin == msg.sender, 'The caller is another contract.');
         require(msg.value >= price, 'Need to send more ETH.');
         address signer = _verify(voucher);
@@ -88,7 +87,7 @@ contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, Acces
     function _hash(NFTVoucher calldata voucher) internal view returns (bytes32) {
         return _hashTypedDataV4(keccak256(abi.encode(
             keccak256("NFTVoucher(uint256 tokenId, string tokenURI)"),
-            keccak256(bytes(voucher.tokenId)),
+            voucher.tokenId,
             keccak256(bytes(voucher.tokenURI))
         )));
     } 
@@ -103,7 +102,7 @@ contract GenerativeAlphaDev is ERC721URIStorage, ERC721Enumerable, EIP712, Acces
     }
 
     /* For ERC-165 */
-    function supportsInterface(bytes4 interfaceId) public view virtual override (AccessControl, ERC721) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override (ERC721, AccessControl) returns (bool) {
         return ERC721.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
     }
 
