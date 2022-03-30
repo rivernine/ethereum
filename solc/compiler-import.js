@@ -47,7 +47,11 @@ function createConfiguration() {
  */
 function compileSources(config) {
   try {
-    var tmp = JSON.parse(solc.compile(JSON.stringify(config), getImports))
+    console.log('tmp')
+    console.log(config)
+    var tmp = JSON.parse(
+      solc.compile(JSON.stringify(config), { import: getImports })
+    )
     return tmp;
   } catch (e) {
     console.log(e);
@@ -63,22 +67,44 @@ function compileSources(config) {
 function getImports(dependency) {
   console.log('Searching for dependency: ', dependency);
   switch (dependency) {
-    case 'AccessControl.sol':
-      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', 'AccessControl.sol'), 'utf8') };
-    case 'Ownable.sol':
-      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', 'Ownable.sol'), 'utf8') };
-    case 'ERC721.sol':
-      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', 'ERC721.sol'), 'utf8') };
-    case 'ERC721URIStorage.sol':
-      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', 'ERC721URIStorage.sol'), 'utf8') };
-    case 'ECDSA.sol':
-      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', 'ECDSA.sol'), 'utf8') };
-    case 'draft-EIP712.sol':
-      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', 'draft-EIP712.sol'), 'utf8') };
+    case '@openzeppelin/contracts/access/AccessControl.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'access', 'AccessControl.sol'), 'utf8') };
+    case '@openzeppelin/contracts/access/Ownable.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'access', 'Ownable.sol'), 'utf8') };
+    case '@openzeppelin/contracts/token/ERC721/ERC721.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'token', 'ERC721', 'ERC721.sol'), 'utf8') };
+    case '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'token', 'ERC721', 'extensions', 'ERC721URIStorage.sol'), 'utf8') };
+    case '@openzeppelin/contracts/utils/cryptography/ECDSA.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'utils', 'cryptography', 'ECDSA.sol'), 'utf8') };
+    case '@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'utils', 'cryptography', 'draft-EIP712.sol'), 'utf8') };
+    case '@openzeppelin/contracts/access/IAccessControl.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'access', 'IAccessControl.sol'), 'utf8') };
+    case '@openzeppelin/contracts/utils/Context.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'utils', 'Context.sol'), 'utf8') };
+    case '@openzeppelin/contracts/utils/introspection/ERC165.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'utils', 'introspection', 'ERC165.sol'), 'utf8') };
+    case '@openzeppelin/contracts/utils/Context.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'utils', 'Context.sol'), 'utf8') };
+    case '@openzeppelin/contracts/token/ERC721/IERC721.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'token', 'ERC721', 'IERC721.sol'), 'utf8') };
+    case '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'token', 'ERC721', 'IERC721Receiver.sol'), 'utf8') };
+    case '@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'token', 'ERC721', 'extensions', 'IERC721Metadata.sol'), 'utf8') };
+    case '@openzeppelin/contracts/utils/Address.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'utils', 'Address.sol'), 'utf8') };
+    case '@openzeppelin/contracts/utils/introspection/IERC165.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'utils', 'introspection', 'IERC165.sol'), 'utf8') };
+    case '@openzeppelin/contracts/utils/Strings.sol':
+      return { contents: fs.readFileSync(path.resolve(__dirname, 'contracts', 'lib', '@openzeppelin', 'contracts', 'utils', 'Strings.sol'), 'utf8') };
     default:
       return { error: 'File not found' }
   }
 }
+
+
 
 /**
  * Shows when there were errors during compilation.
@@ -116,10 +142,8 @@ function writeOutput(compiled, buildPath) {
 
 const buildPath = compilingPreperations();
 const config = createConfiguration();
-// console.log('config')
-// console.log(config)
 const compiled = compileSources(config);
-// console.log('compiled')
-// console.log(compiled)
+console.log(compiled)
 errorHandling(compiled);
-writeOutput(compiled, buildPath);
+console.log(compiled.contracts)
+// writeOutput(compiled, buildPath);
