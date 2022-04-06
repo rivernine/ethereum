@@ -4,17 +4,15 @@ async function main() {
   console.log("Redeemer account:", redeemer.address);
   console.log("Account balance:", (await redeemer.getBalance()).toString());
 
-  const UniqueAlphaDevV2 = await ethers.getContractFactory('UniqueAlphaDevV2')
-  const uniqueAlphaDevV2 = await UniqueAlphaDevV2.attach('0x236F20c038eB2803AA4536675162F992aC002E42')
+  const factory = await ethers.getContractFactory('GenerativeAlphaDev')
+  const contract = await factory.attach('0x0B7A00501586085e4De8E83507667559A5F4B4AB')
 
-  const voucher = {
-    uri: 'ipfs://QmX6j8B15ad31Zbwv73WpZwUfSV79rzbvUcjEkxQb2Wvhe',
-    signature: '0x6f950b1cf7215e3755dd03da79f428bbd485851804f3dd091ed7d29b1dca28c44d6b7bd842738af36802e8f2b9896033262ec3f0169227e59198e185fe9c483a1c'
-  }
-
-  console.log(await uniqueAlphaDevV2.connect(redeemer).redeem(voucher))
+  const voucher = {tokenId:1,tokenURI:"32219ca53a",signature:"0xfcdb970bb2963cdc5e8fca4a43fd6e993f7c7b84b50f613f046c3c88f87e80323e92872d2f0f5d4d31d1699893e3eec3f19f798c260fd262528d4a5c47b8cc1d1c"}
+  const options = {value: ethers.utils.parseEther("0.005")}
+  console.log(await contract.connect(redeemer).redeem(voucher, options))
 }
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 main()
   .then(() => process.exit(0))
   .catch((error) => {

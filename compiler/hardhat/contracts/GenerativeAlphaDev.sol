@@ -18,8 +18,6 @@ contract GenerativeAlphaDev is
 {
     /* Voucher */
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    string private constant SIGNING_DOMAIN = "VoucherDomain";
-    string private constant SIGNATURE_VERSION = "1";
     struct NFTVoucher {
         uint256 tokenId;
         string tokenURI;
@@ -32,7 +30,7 @@ contract GenerativeAlphaDev is
     address public vault;
 
     /* Sale */
-    bool public isActive;
+    bool public isActive = true;
     uint256 public price;
 
     /* Loyalty */
@@ -42,13 +40,15 @@ contract GenerativeAlphaDev is
     constructor(
         string memory _name,
         string memory _symbol,
+        string memory _signingDomainName,
+        string memory _signingDomainVersion,
         address _minter,
         address _royaltyAddress,
         uint96 _royaltyFee,
         uint256 _maxSupply,
         string memory _uri,
         uint256 _price
-    ) ERC721(_name, _symbol) EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) {
+    ) ERC721(_name, _symbol) EIP712(_signingDomainName, _signingDomainVersion) {
         _setupRole(MINTER_ROLE, _minter);
         _setDefaultRoyalty(_royaltyAddress, _royaltyFee);
         royaltyAddress = _royaltyAddress;
@@ -87,7 +87,7 @@ contract GenerativeAlphaDev is
         royaltyFee = _royaltyFee;
         _setDefaultRoyalty(royaltyAddress, royaltyFee);
     }
-    
+
     /* Redeem */
     function redeem(NFTVoucher calldata voucher) external payable {
         require(isActive, "Sale must be active to mint");
@@ -131,7 +131,7 @@ contract GenerativeAlphaDev is
                 keccak256(
                     abi.encode(
                         keccak256(
-                            "NFTVoucher(uint256 tokenId, string tokenURI)"
+                            "NFTVoucher(uint256 tokenId,string tokenURI)"
                         ),
                         voucher.tokenId,
                         keccak256(bytes(voucher.tokenURI))
